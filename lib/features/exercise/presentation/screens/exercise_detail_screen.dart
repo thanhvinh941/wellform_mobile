@@ -1,136 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wellform_mobile/features/exercise/domain/models/Exercise_set.dart';
+import 'package:wellform_mobile/features/exercise/domain/models/segment.dart';
 
-/// ===== I18N support (thay cho pipe Angular) =====
-typedef I18nMap = Map<String, Map<String, String>>;
-
-extension I18nStringX on String {
-  String tr(
-      I18nMap? i18n, {
-        String lang = 'en',
-        String? fallbackLang,
-      }) {
-    if (i18n == null || i18n.isEmpty) return this;
-    final s1 = i18n[lang]?[this];
-    if (s1 != null && s1.isNotEmpty) return s1;
-    if (fallbackLang != null) {
-      final s2 = i18n[fallbackLang]?[this];
-      if (s2 != null && s2.isNotEmpty) return s2;
-    }
-    for (final e in i18n.entries) {
-      final s = e.value[this];
-      if (s != null && s.isNotEmpty) return s;
-    }
-    return this; // fallback về keyCode nếu không có i18n
-  }
-}
-
-/// ===== Helpers =====
-String formatTime(int? totalSeconds) {
-  if (totalSeconds == null || totalSeconds <= 0) return '—';
-  final m = totalSeconds ~/ 60;
-  final s = totalSeconds % 60;
-  if (m > 0 && s > 0) return '${m}m ${s}s';
-  if (m > 0) return '${m}m';
-  return '${s}s';
-}
-
-/// ===== Models (tối thiểu cho UI) =====
-class ExerciseSegment {
-  final String nameCode;
-  final String categoryCode;
-  final int duration; // seconds
-  final int? restTime; // seconds
-  final String? imageUrl;
-
-  const ExerciseSegment({
-    required this.nameCode,
-    required this.categoryCode,
-    required this.duration,
-    this.restTime,
-    this.imageUrl,
-  });
-}
-
-class ExerciseDetail {
-  final String id;
-  final String nameCode;
-  final String? descriptionCode;
-  final String? tipsCode;
-  final String? imageUrl;
-  final String? videoUrl;
-  final int? duration; // seconds
-  final String levelCode;
-  final List<String> focusAreaCodes; // keyCode
-  final List<String> equipmentCodes; // keyCode
-  final List<ExerciseSegment> segments;
-
-  const ExerciseDetail({
-    required this.id,
-    required this.nameCode,
-    required this.levelCode,
-    this.descriptionCode,
-    this.tipsCode,
-    this.imageUrl,
-    this.videoUrl,
-    this.duration,
-    this.focusAreaCodes = const [],
-    this.equipmentCodes = const [],
-    this.segments = const [],
-  });
-}
+import '../../../../core/extensions/date_time.dart';
+import '../../../../core/extensions/i18n_string.dart';
+import '../../../../core/models/exercise_models.dart';
+import '../../domain/models/exercise_detail.dart';
 
 /// ===== Screen =====
 /// Bạn sẽ truyền exerciseId từ go_router và truyền detail + i18n sau khi fetch API.
 /// Nếu detail = null -> hiện "Exercise not found".
-class ExerciseDetailScreen extends StatelessWidget {
+class ExerciseDetailScreen extends ConsumerStatefulWidget {
   final String exerciseId;
 
-  /// Dữ liệu chi tiết (khi đã fetch xong). Nếu null, hiển thị empty state.
-  final ExerciseDetail? detail;
+  const ExerciseDetailScreen(this.exerciseId, {super.key});
+
+  @override
+  ConsumerState<ExerciseDetailScreen> createState() =>
+      _ExerciseDetailScreen(exerciseId);
+}
+
+class _ExerciseDetailScreen extends ConsumerState<ExerciseDetailScreen> {
+  final String exerciseId;
+
+  @override
+  void initState() {
+    //
+  }
 
   /// Bản đồ i18n trả về từ API (_I18N).
-  final I18nMap? i18n;
-
-  /// Ngôn ngữ muốn hiển thị (ví dụ: 'en', 'vi'...)
-  final String lang;
+  I18nMap? i18n;
 
   /// Callback khi bấm "Start Exercise"
-  final void Function(String videoUrl)? onStart;
+  void Function(String videoUrl)? onStart;
 
-  const ExerciseDetailScreen({
-    super.key,
-    required this.exerciseId,
-    this.detail,
-    this.i18n,
-    this.lang = 'en',
-    this.onStart,
-  });
+  _ExerciseDetailScreen(this.exerciseId);
 
   @override
   Widget build(BuildContext context) {
-    final d = detail;
+    final d = ExerciseDetail(
+      id: '',
+      nameCode: 'Squat',
+      level: 'Intermediate',
+      imageUrl:
+          'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+      duration: 50,
+      focusAreas: const [
+        FocusArea(id: 'fa_legs', keyCode: 'Legs'),
+        FocusArea(id: 'fa_glutes', keyCode: 'Glutes'),
+        FocusArea(id: 'fa_core', keyCode: 'Core'),
+      ],
+      equipments: const [Equipment(id: 'eq_body', keyCode: 'Bodyweight')],
+      descriptionCode: '',
+      segments: [],
+    );
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(d == null ? 'Exercise Detail' : d.nameCode.tr(i18n, lang: lang)),
-      ),
-      body: d == null
-          ? _EmptyState()
-          : LayoutBuilder(
+      appBar: AppBar(title: Text(d.nameCode.tr(i18n, lang: 'vi'))),
+      body: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth >= 900; // breakpoint đơn giản
           final left = _LeftSection(
             detail: d,
             i18n: i18n,
-            lang: lang,
+            lang: 'vi',
             onStart: onStart,
           );
-          final right = _RightSection(
-            detail: d,
-            i18n: i18n,
-            lang: lang,
-          );
+          final right = _RightSection(detail: d, i18n: i18n, lang: 'vi');
 
           if (isWide) {
             return Padding(
@@ -150,11 +88,7 @@ class ExerciseDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                left,
-                const SizedBox(height: 16),
-                right,
-              ],
+              children: [left, const SizedBox(height: 16), right],
             ),
           );
         },
@@ -191,19 +125,27 @@ class _LeftSection extends StatelessWidget {
             aspectRatio: 16 / 9,
             child: detail.imageUrl == null || detail.imageUrl!.isEmpty
                 ? Container(
-              color: Colors.grey.shade100,
-              alignment: Alignment.center,
-              child: Icon(Icons.image, size: 48, color: Colors.grey.shade400),
-            )
+                    color: Colors.grey.shade100,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.image,
+                      size: 48,
+                      color: Colors.grey.shade400,
+                    ),
+                  )
                 : Image.network(
-              detail.imageUrl!,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: Colors.grey.shade100,
-                alignment: Alignment.center,
-                child: Icon(Icons.broken_image, size: 48, color: Colors.grey.shade400),
-              ),
-            ),
+                    detail.imageUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: Colors.grey.shade100,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.broken_image,
+                        size: 48,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
           ),
         ),
         const SizedBox(height: 12),
@@ -227,15 +169,18 @@ class _LeftSection extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Description & Tips
-        _InfoBlock(
-          title: 'Description',
-          body: (detail.descriptionCode ?? '').tr(i18n, lang: lang),
-        ),
-        if (detail.tipsCode != null && detail.tipsCode!.isNotEmpty) ...[
+        if (detail.descriptionCode.isNotEmpty) ...[
+          _InfoBlock(
+            title: '',
+            body: (detail.descriptionCode ?? '').tr(i18n, lang: lang),
+          ),
+        ],
+
+        if (detail.tips != null && detail.tips!.isNotEmpty) ...[
           const SizedBox(height: 12),
           _InfoBlock(
-            title: 'Tips',
-            body: detail.tipsCode!.tr(i18n, lang: lang),
+            title: '',
+            body: detail.tips!.tr(i18n, lang: lang),
           ),
         ],
       ],
@@ -255,13 +200,15 @@ class _InfoBlock extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: theme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+          Text(
+            title,
+            style: theme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
           const SizedBox(height: 8),
           Text(body, style: theme.bodyMedium),
         ],
@@ -289,15 +236,22 @@ class _RightSection extends StatelessWidget {
 
     final name = detail.nameCode.tr(i18n, lang: lang);
     final desc = (detail.descriptionCode ?? '').tr(i18n, lang: lang);
-    final lvl = detail.levelCode.tr(i18n, lang: lang);
-    final focus = detail.focusAreaCodes.map((e) => e.tr(i18n, lang: lang)).join(', ');
-    final equips = detail.equipmentCodes.map((e) => e.tr(i18n, lang: lang)).join(', ');
+    final lvl = detail.level.tr(i18n, lang: lang);
+    final focus = detail.focusAreas
+        .map((e) => e.keyCode.tr(i18n, lang: lang))
+        .join(', ');
+    final equips = detail.equipments
+        .map((e) => e.keyCode.tr(i18n, lang: lang))
+        .join(', ');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Exercise Name + Description
-        Text(name, style: theme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
+        Text(
+          name,
+          style: theme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
         if (desc.isNotEmpty) ...[
           const SizedBox(height: 8),
           Text(desc, style: theme.bodyMedium),
@@ -319,7 +273,10 @@ class _RightSection extends StatelessWidget {
 
         // Segments (if any)
         if (detail.segments.isNotEmpty) ...[
-          Text('Segments', style: theme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+          Text(
+            'Segments',
+            style: theme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
           const SizedBox(height: 8),
           _SegmentsList(segments: detail.segments, i18n: i18n, lang: lang),
         ],
@@ -349,7 +306,10 @@ class _StatsGrid extends StatelessWidget {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$label ', style: theme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+          Text(
+            '$label ',
+            style: theme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
           Expanded(
             child: Text(
               value,
@@ -377,9 +337,13 @@ class _StatsGrid extends StatelessWidget {
 }
 
 class _SegmentsList extends StatelessWidget {
-  const _SegmentsList({required this.segments, required this.i18n, required this.lang});
+  const _SegmentsList({
+    required this.segments,
+    required this.i18n,
+    required this.lang,
+  });
 
-  final List<ExerciseSegment> segments;
+  final List<Segment> segments;
   final I18nMap? i18n;
   final String lang;
 
@@ -395,7 +359,6 @@ class _SegmentsList extends StatelessWidget {
       itemBuilder: (context, index) {
         final s = segments[index];
         final title = s.nameCode.tr(i18n, lang: lang);
-        final cat = s.categoryCode.tr(i18n, lang: lang);
 
         return InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -403,7 +366,9 @@ class _SegmentsList extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -417,19 +382,27 @@ class _SegmentsList extends StatelessWidget {
                     height: 72,
                     child: s.imageUrl == null || s.imageUrl!.isEmpty
                         ? Container(
-                      color: Colors.grey.shade100,
-                      alignment: Alignment.center,
-                      child: Icon(Icons.image, size: 28, color: Colors.grey.shade400),
-                    )
+                            color: Colors.grey.shade100,
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.image,
+                              size: 28,
+                              color: Colors.grey.shade400,
+                            ),
+                          )
                         : Image.network(
-                      s.imageUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: Colors.grey.shade100,
-                        alignment: Alignment.center,
-                        child: Icon(Icons.broken_image, size: 28, color: Colors.grey.shade400),
-                      ),
-                    ),
+                            s.imageUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                              color: Colors.grey.shade100,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.broken_image,
+                                size: 28,
+                                color: Colors.grey.shade400,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -444,14 +417,24 @@ class _SegmentsList extends StatelessWidget {
                         runSpacing: 4,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Text(cat, style: theme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary)),
-                          Text(title, style: theme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
+                          Text(
+                            title,
+                            style: theme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 6),
-                      Text('Duration: ${formatTime(s.duration)}', style: theme.bodySmall),
-                      if (s.restTime != null && s.restTime! > 0)
-                        Text('Rest: ${formatTime(s.restTime)}', style: theme.bodySmall),
+                      Text(
+                        'Duration: ${formatTime(s.duration)}',
+                        style: theme.bodySmall,
+                      ),
+                      if (s.restTime > 0)
+                        Text(
+                          'Rest: ${formatTime(s.restTime)}',
+                          style: theme.bodySmall,
+                        ),
                     ],
                   ),
                 ),

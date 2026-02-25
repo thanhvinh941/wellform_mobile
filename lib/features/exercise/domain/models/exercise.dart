@@ -3,8 +3,8 @@ import 'equipment.dart';
 
 class Exercise {
   final String id;
-  final String name;
-  final String levelCode;
+  final String nameCode;
+  final String level;
   final String? imageUrl;
   final int duration; // seconds
   final List<FocusArea> focusAreas;
@@ -12,8 +12,8 @@ class Exercise {
 
   const Exercise({
     required this.id,
-    required this.name,
-    required this.levelCode,
+    required this.nameCode,
+    required this.level,
     required this.duration,
     required this.focusAreas,
     required this.equipments,
@@ -22,8 +22,8 @@ class Exercise {
 
   factory Exercise.fromJson(Map<String, dynamic> json) => Exercise(
     id: json['id'].toString(),
-    name: json['name'] as String? ?? '',
-    levelCode: json['levelCode'] as String? ?? '',
+    nameCode: json['nameCode'] as String? ?? '',
+    level: json['level'] as String? ?? '',
     imageUrl: json['imageUrl'] as String?,
     duration: (json['duration'] as num?)?.toInt() ?? 0,
     focusAreas: (json['focusAreas'] as List? ?? [])
@@ -36,8 +36,8 @@ class Exercise {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'name': name,
-    'levelCode': levelCode,
+    'name': nameCode,
+    'levelCode': level,
     'imageUrl': imageUrl,
     'duration': duration,
     'focusAreas': focusAreas.map((e) => e.toJson()).toList(),

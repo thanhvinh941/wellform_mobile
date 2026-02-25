@@ -193,7 +193,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
   void goToDetail(dynamic id) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ExerciseDetailScreen(exerciseId: id.toString()),
+        builder: (_) => ExerciseDetailScreen(id.toString()),
       ),
     );
   }
