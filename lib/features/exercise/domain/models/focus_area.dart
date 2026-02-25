@@ -1,12 +1,12 @@
 class FocusArea {
   final String id;
-  final String keyText;
-  const FocusArea({required this.id, required this.keyText});
+  final String keyCode;
+  const FocusArea({required this.id, required this.keyCode});
 
   factory FocusArea.fromJson(Map<String, dynamic> json) => FocusArea(
     id: json['id'].toString(),
-    keyText: json['keyText'] as String? ?? '',
+    keyCode: json['keyCode'] as String? ?? '',
   );
 
-  Map<String, dynamic> toJson() => {'id': id, 'keyText': keyText};
+  Map<String, dynamic> toJson() => {'id': id, 'keyCode': keyCode};
 }

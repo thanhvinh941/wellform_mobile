@@ -35,90 +35,90 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     Exercise(
       id: 'ex_001',
       name: 'Push Up',
-      levelText: 'Beginner',
+      levelCode: 'Beginner',
       imageUrl: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1200&auto=format&fit=crop',
       duration: 45, // giây
       focusAreas: const [
-        FocusArea(id: 'fa_chest', keyText: 'Chest'),
-        FocusArea(id: 'fa_triceps', keyText: 'Triceps'),
-        FocusArea(id: 'fa_core', keyText: 'Core'),
+        FocusArea(id: 'fa_chest', keyCode: 'Chest'),
+        FocusArea(id: 'fa_triceps', keyCode: 'Triceps'),
+        FocusArea(id: 'fa_core', keyCode: 'Core'),
       ],
       equipments: const [
-        Equipment(id: 'eq_body', keyText: 'Bodyweight'),
+        Equipment(id: 'eq_body', keyCode: 'Bodyweight'),
       ],
     ),
     Exercise(
       id: 'ex_002',
       name: 'Plank',
-      levelText: 'Beginner',
+      levelCode: 'Beginner',
       imageUrl: 'https://images.unsplash.com/photo-1599050751790-26b3ffcc4d07?q=80&w=1200&auto=format&fit=crop',
       duration: 60,
       focusAreas: const [
-        FocusArea(id: 'fa_core', keyText: 'Core'),
-        FocusArea(id: 'fa_shoulders', keyText: 'Shoulders'),
+        FocusArea(id: 'fa_core', keyCode: 'Core'),
+        FocusArea(id: 'fa_shoulders', keyCode: 'Shoulders'),
       ],
       equipments: const [
-        Equipment(id: 'eq_mat', keyText: 'Yoga Mat'),
+        Equipment(id: 'eq_mat', keyCode: 'Yoga Mat'),
       ],
     ),
     Exercise(
       id: 'ex_003',
       name: 'Dumbbell Row',
-      levelText: 'Intermediate',
+      levelCode: 'Intermediate',
       imageUrl: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?q=80&w=1200&auto=format&fit=crop',
       duration: 40,
       focusAreas: const [
-        FocusArea(id: 'fa_back', keyText: 'Back'),
-        FocusArea(id: 'fa_biceps', keyText: 'Biceps'),
+        FocusArea(id: 'fa_back', keyCode: 'Back'),
+        FocusArea(id: 'fa_biceps', keyCode: 'Biceps'),
       ],
       equipments: const [
-        Equipment(id: 'eq_dumbbell', keyText: 'Dumbbell'),
-        Equipment(id: 'eq_bench', keyText: 'Bench'),
+        Equipment(id: 'eq_dumbbell', keyCode: 'Dumbbell'),
+        Equipment(id: 'eq_bench', keyCode: 'Bench'),
       ],
     ),
     Exercise(
       id: 'ex_004',
       name: 'Squat',
-      levelText: 'Intermediate',
+      levelCode: 'Intermediate',
       imageUrl: 'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
       duration: 50,
       focusAreas: const [
-        FocusArea(id: 'fa_legs', keyText: 'Legs'),
-        FocusArea(id: 'fa_glutes', keyText: 'Glutes'),
-        FocusArea(id: 'fa_core', keyText: 'Core'),
+        FocusArea(id: 'fa_legs', keyCode: 'Legs'),
+        FocusArea(id: 'fa_glutes', keyCode: 'Glutes'),
+        FocusArea(id: 'fa_core', keyCode: 'Core'),
       ],
       equipments: const [
-        Equipment(id: 'eq_body', keyText: 'Bodyweight'),
+        Equipment(id: 'eq_body', keyCode: 'Bodyweight'),
       ],
     ),
     Exercise(
       id: 'ex_005',
       name: 'Shoulder Press',
-      levelText: 'Advanced',
+      levelCode: 'Advanced',
       imageUrl: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop',
       duration: 45,
       focusAreas: const [
-        FocusArea(id: 'fa_shoulders', keyText: 'Shoulders'),
-        FocusArea(id: 'fa_triceps', keyText: 'Triceps'),
+        FocusArea(id: 'fa_shoulders', keyCode: 'Shoulders'),
+        FocusArea(id: 'fa_triceps', keyCode: 'Triceps'),
       ],
       equipments: const [
-        Equipment(id: 'eq_dumbbell', keyText: 'Dumbbell'),
+        Equipment(id: 'eq_dumbbell', keyCode: 'Dumbbell'),
       ],
     ),
     Exercise(
       id: 'ex_006',
       name: 'Deadlift',
-      levelText: 'Advanced',
+      levelCode: 'Advanced',
       imageUrl: 'https://images.unsplash.com/photo-1546484959-f9a53db89f19?q=80&w=1200&auto=format&fit=crop',
       duration: 55,
       focusAreas: const [
-        FocusArea(id: 'fa_back', keyText: 'Back'),
-        FocusArea(id: 'fa_hamstrings', keyText: 'Hamstrings'),
-        FocusArea(id: 'fa_glutes', keyText: 'Glutes'),
+        FocusArea(id: 'fa_back', keyCode: 'Back'),
+        FocusArea(id: 'fa_hamstrings', keyCode: 'Hamstrings'),
+        FocusArea(id: 'fa_glutes', keyCode: 'Glutes'),
       ],
       equipments: const [
-        Equipment(id: 'eq_barbell', keyText: 'Barbell'),
-        Equipment(id: 'eq_plates', keyText: 'Plates'),
+        Equipment(id: 'eq_barbell', keyCode: 'Barbell'),
+        Equipment(id: 'eq_plates', keyCode: 'Plates'),
       ],
     ),
   ];
@@ -267,13 +267,13 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                     return SizedBox.expand(
                       child: ExerciseCard(
                         name: ex.name,
-                        levelText: ex.levelText,
+                        levelCode: ex.levelCode,
                         imageUrl: ex.imageUrl,
                         duration: ex.duration,
                         focusAreas:
-                        ex.focusAreas.map((a) => a.keyText).toList(),
+                        ex.focusAreas.map((a) => a.keyCode).toList(),
                         equipments:
-                        ex.equipments.map((e) => e.keyText).toList(),
+                        ex.equipments.map((e) => e.keyCode).toList(),
                         onTap: () => goToDetail(ex.id),
                       ),
                     );
