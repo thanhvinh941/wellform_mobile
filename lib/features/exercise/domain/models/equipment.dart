@@ -1,12 +1,12 @@
 class Equipment {
   final String id;
-  final String keyText;
-  const Equipment({required this.id, required this.keyText});
+  final String keyCode;
+  const Equipment({required this.id, required this.keyCode});
 
   factory Equipment.fromJson(Map<String, dynamic> json) => Equipment(
     id: json['id'].toString(),
-    keyText: json['keyText'] as String? ?? '',
+    keyCode: json['keyCode'] as String? ?? '',
   );
 
-  Map<String, dynamic> toJson() => {'id': id, 'keyText': keyText};
+  Map<String, dynamic> toJson() => {'id': id, 'keyCode': keyCode};
 }

@@ -309,10 +309,10 @@ class _RightSection extends StatelessWidget {
         Divider(color: scheme.outlineVariant),
         const SizedBox(height: 12),
         _StatsGrid(
-          durationText: formatTime(detail.duration),
-          difficultyText: lvl,
-          focusAreasText: focus.isEmpty ? '—' : focus,
-          equipmentsText: equips.isEmpty ? '—' : equips,
+          durationCode: formatTime(detail.duration),
+          difficultyCode: lvl,
+          focusAreasCode: focus.isEmpty ? '—' : focus,
+          equipmentsCode: equips.isEmpty ? '—' : equips,
         ),
 
         const SizedBox(height: 16),
@@ -330,16 +330,16 @@ class _RightSection extends StatelessWidget {
 
 class _StatsGrid extends StatelessWidget {
   const _StatsGrid({
-    required this.durationText,
-    required this.difficultyText,
-    required this.focusAreasText,
-    required this.equipmentsText,
+    required this.durationCode,
+    required this.difficultyCode,
+    required this.focusAreasCode,
+    required this.equipmentsCode,
   });
 
-  final String durationText;
-  final String difficultyText;
-  final String focusAreasText;
-  final String equipmentsText;
+  final String durationCode;
+  final String difficultyCode;
+  final String focusAreasCode;
+  final String equipmentsCode;
 
   @override
   Widget build(BuildContext context) {
@@ -364,13 +364,13 @@ class _StatsGrid extends StatelessWidget {
 
     return Column(
       children: [
-        item('Duration:', durationText),
+        item('Duration:', durationCode),
         const SizedBox(height: 8),
-        item('Difficulty:', difficultyText),
+        item('Difficulty:', difficultyCode),
         const SizedBox(height: 8),
-        item('Focus Area:', focusAreasText),
+        item('Focus Area:', focusAreasCode),
         const SizedBox(height: 8),
-        item('Equipments:', equipmentsText),
+        item('Equipments:', equipmentsCode),
       ],
     );
   }

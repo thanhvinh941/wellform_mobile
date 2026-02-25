@@ -4,7 +4,7 @@ class ExerciseCard extends StatelessWidget {
   const ExerciseCard({
     super.key,
     required this.name,
-    required this.levelText, // ví dụ: "Advanced"
+    required this.levelCode, // ví dụ: "Advanced"
     this.imageUrl,
     required this.duration, // đơn vị: giây
     this.focusAreas = const <String>[],
@@ -14,7 +14,7 @@ class ExerciseCard extends StatelessWidget {
   });
 
   final String name;
-  final String levelText;
+  final String levelCode;
   final String? imageUrl;
   final int duration;
   final List<String> focusAreas;
@@ -47,7 +47,7 @@ class ExerciseCard extends StatelessWidget {
             // -------- Title area (ảnh + badge level) ----------
             _HeaderImage(
               imageUrl: imageUrl,
-              levelText: levelText,
+              levelCode: levelCode,
               badgeColor: badgeColor ?? scheme.secondaryContainer,
               badgeTextColor: scheme.onSecondaryContainer,
             ),
@@ -114,13 +114,13 @@ class ExerciseCard extends StatelessWidget {
 class _HeaderImage extends StatelessWidget {
   const _HeaderImage({
     required this.imageUrl,
-    required this.levelText,
+    required this.levelCode,
     required this.badgeColor,
     required this.badgeTextColor,
   });
 
   final String? imageUrl;
-  final String levelText;
+  final String levelCode;
   final Color badgeColor;
   final Color badgeTextColor;
 
@@ -165,7 +165,7 @@ class _HeaderImage extends StatelessWidget {
                 ],
               ),
               child: Text(
-                levelText,
+                levelCode,
                 style: TextStyle(
                   color: badgeTextColor,
                   fontWeight: FontWeight.w600,
