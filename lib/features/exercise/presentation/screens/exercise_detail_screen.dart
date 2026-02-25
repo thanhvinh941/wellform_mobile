@@ -33,7 +33,9 @@ class _ExerciseDetailScreen extends ConsumerState<ExerciseDetailScreen> {
   I18nMap? i18n;
 
   /// Callback khi bấm "Start Exercise"
-  void Function(String videoUrl)? onStart;
+  void onStart(String videoUrl) {
+    print(videoUrl);
+  }
 
   _ExerciseDetailScreen(this.exerciseId);
 
@@ -45,6 +47,8 @@ class _ExerciseDetailScreen extends ConsumerState<ExerciseDetailScreen> {
       level: 'Intermediate',
       imageUrl:
           'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+      videoUrl:
+          'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
       duration: 50,
       focusAreas: const [
         FocusArea(id: 'fa_legs', keyCode: 'Legs'),
@@ -53,7 +57,19 @@ class _ExerciseDetailScreen extends ConsumerState<ExerciseDetailScreen> {
       ],
       equipments: const [Equipment(id: 'eq_body', keyCode: 'Bodyweight')],
       descriptionCode: '',
-      segments: [],
+      segments: [
+        Segment(
+          'seg-1',
+          'back',
+          60,
+          200,
+          'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+          [],
+          'back 1',
+          'back 1 des',
+        ),
+      ],
     );
     final scheme = Theme.of(context).colorScheme;
 
@@ -199,9 +215,7 @@ class _InfoBlock extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -235,7 +249,7 @@ class _RightSection extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     final name = detail.nameCode.tr(i18n, lang: lang);
-    final desc = (detail.descriptionCode ?? '').tr(i18n, lang: lang);
+    final desc = (detail.descriptionCode).tr(i18n, lang: lang);
     final lvl = detail.level.tr(i18n, lang: lang);
     final focus = detail.focusAreas
         .map((e) => e.keyCode.tr(i18n, lang: lang))
