@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../core/layout/main_layout.dart';
 import '../features/exercise/presentation/screens/exercise_detail_screen.dart';
 import '../features/exercise/presentation/screens/exercise_screen.dart';
+import '../features/exercise/presentation/screens/segment_intro_screen.dart';
 import '../features/profile/presentation/screens/profile_screen.dart';
 // import '../features/settings/presentation/screens/settings_screen.dart';
 
@@ -30,6 +31,15 @@ final appRouter = GoRouter(
           builder: (_, state) {
             final id = state.pathParameters['id']!;
             return ExerciseDetailScreen(id);
+          },
+        ),
+
+        //exercise/:id/start
+        GoRoute(
+          path: 'exercise/:id/start',
+          name: 'exercise-start',
+          builder: (_, state) {
+            return SegmentIntroScreen();
           },
         ),
 

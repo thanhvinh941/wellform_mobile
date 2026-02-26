@@ -118,66 +118,66 @@ class Results<T> {
     return keyCode;
   }
 }
-
-////////////////////////////////////////////////////////////////////////////////
-/// Ví dụ: Model Exercise + cách parse từ DATA và dùng i18n
-////////////////////////////////////////////////////////////////////////////////
-
-class Exercise {
-  final String id;
-  final String? imageUrl;
-  final int? duration; // seconds (null nếu không có)
-  final String levelCode; // ví dụ: "df.advan.name"
-  final String nameCode;  // ví dụ: "ex.push-seg.name"
-  final List<String> focusAreas; // để trống theo sample
-  final List<String> equipments; // để trống theo sample
-
-  const Exercise({
-    required this.id,
-    required this.imageUrl,
-    required this.duration,
-    required this.levelCode,
-    required this.nameCode,
-    required this.focusAreas,
-    required this.equipments,
-  });
-
-  factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
-      id: json['id']?.toString() ?? '',
-      imageUrl: json['imageUrl'] as String?,
-      duration: json['duration'] == null ? null : (json['duration'] as num).toInt(),
-      levelCode: json['level']?.toString() ?? '',
-      nameCode: json['nameCode']?.toString() ?? '',
-      focusAreas: ((json['focusAreas'] as List?) ?? const [])
-          .map((e) => e?.toString() ?? '')
-          .where((e) => e.isNotEmpty)
-          .toList(),
-      equipments: ((json['equipments'] as List?) ?? const [])
-          .map((e) => e?.toString() ?? '')
-          .where((e) => e.isNotEmpty)
-          .toList(),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'imageUrl': imageUrl,
-    'duration': duration,
-    'level': levelCode,
-    'nameCode': nameCode,
-    'focusAreas': focusAreas,
-    'equipments': equipments,
-  };
-
-  /// Lấy tên hiển thị theo i18n map.
-  String localizedName(I18nMap i18n, {String lang = 'vi', String? fallbackLang}) {
-    final results = Results<Never>(i18n: i18n, data: const []);
-    return results.t(nameCode, lang: lang, defaultLang: fallbackLang);
-  }
-
-  String localizedLevel(I18nMap i18n, {String lang = 'vi', String? fallbackLang}) {
-    final results = Results<Never>(i18n: i18n, data: const []);
-    return results.t(levelCode, lang: lang, defaultLang: fallbackLang);
-  }
-}
+//
+// ////////////////////////////////////////////////////////////////////////////////
+// /// Ví dụ: Model Exercise + cách parse từ DATA và dùng i18n
+// ////////////////////////////////////////////////////////////////////////////////
+//
+// class Exercise {
+//   final String id;
+//   final String? imageUrl;
+//   final int? duration; // seconds (null nếu không có)
+//   final String levelCode; // ví dụ: "df.advan.name"
+//   final String nameCode;  // ví dụ: "ex.push-seg.name"
+//   final List<String> focusAreas; // để trống theo sample
+//   final List<String> equipments; // để trống theo sample
+//
+//   const Exercise({
+//     required this.id,
+//     required this.imageUrl,
+//     required this.duration,
+//     required this.levelCode,
+//     required this.nameCode,
+//     required this.focusAreas,
+//     required this.equipments,
+//   });
+//
+//   factory Exercise.fromJson(Map<String, dynamic> json) {
+//     return Exercise(
+//       id: json['id']?.toString() ?? '',
+//       imageUrl: json['imageUrl'] as String?,
+//       duration: json['duration'] == null ? null : (json['duration'] as num).toInt(),
+//       levelCode: json['level']?.toString() ?? '',
+//       nameCode: json['nameCode']?.toString() ?? '',
+//       focusAreas: ((json['focusAreas'] as List?) ?? const [])
+//           .map((e) => e?.toString() ?? '')
+//           .where((e) => e.isNotEmpty)
+//           .toList(),
+//       equipments: ((json['equipments'] as List?) ?? const [])
+//           .map((e) => e?.toString() ?? '')
+//           .where((e) => e.isNotEmpty)
+//           .toList(),
+//     );
+//   }
+//
+//   Map<String, dynamic> toJson() => {
+//     'id': id,
+//     'imageUrl': imageUrl,
+//     'duration': duration,
+//     'level': levelCode,
+//     'nameCode': nameCode,
+//     'focusAreas': focusAreas,
+//     'equipments': equipments,
+//   };
+//
+//   /// Lấy tên hiển thị theo i18n map.
+//   String localizedName(I18nMap i18n, {String lang = 'vi', String? fallbackLang}) {
+//     final results = Results<Never>(i18n: i18n, data: const []);
+//     return results.t(nameCode, lang: lang, defaultLang: fallbackLang);
+//   }
+//
+//   String localizedLevel(I18nMap i18n, {String lang = 'vi', String? fallbackLang}) {
+//     final results = Results<Never>(i18n: i18n, data: const []);
+//     return results.t(levelCode, lang: lang, defaultLang: fallbackLang);
+//   }
+// }

@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wellform_mobile/features/exercise/domain/models/Exercise_set.dart';
 import 'package:wellform_mobile/features/exercise/domain/models/segment.dart';
+import 'package:wellform_mobile/features/exercise/presentation/providers/exercise_providers.dart';
+import 'package:wellform_mobile/features/exercise/presentation/screens/segment_intro_screen.dart';
 
 import '../../../../core/extensions/date_time.dart';
 import '../../../../core/extensions/i18n_string.dart';
 import '../../../../core/models/exercise_models.dart';
+import '../../domain/models/equipment.dart';
 import '../../domain/models/exercise_detail.dart';
+import '../../domain/models/focus_area.dart';
 
 /// ===== Screen =====
 /// Bạn sẽ truyền exerciseId từ go_router và truyền detail + i18n sau khi fetch API.
@@ -26,7 +30,7 @@ class _ExerciseDetailScreen extends ConsumerState<ExerciseDetailScreen> {
 
   @override
   void initState() {
-    //
+    ref.read(exerciseRepoProvider).search();
   }
 
   /// Bản đồ i18n trả về từ API (_I18N).
@@ -34,7 +38,11 @@ class _ExerciseDetailScreen extends ConsumerState<ExerciseDetailScreen> {
 
   /// Callback khi bấm "Start Exercise"
   void onStart(String videoUrl) {
-    print(videoUrl);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SegmentIntroScreen(),
+      ),
+    );
   }
 
   _ExerciseDetailScreen(this.exerciseId);
@@ -74,7 +82,7 @@ class _ExerciseDetailScreen extends ConsumerState<ExerciseDetailScreen> {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(d.nameCode.tr(i18n, lang: 'vi'))),
+      appBar: AppBar(title: Text(d.nameCode.tr)),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth >= 900; // breakpoint đơn giản
@@ -188,7 +196,7 @@ class _LeftSection extends StatelessWidget {
         if (detail.descriptionCode.isNotEmpty) ...[
           _InfoBlock(
             title: '',
-            body: (detail.descriptionCode ?? '').tr(i18n, lang: lang),
+            body: (detail.descriptionCode ?? '').tr,
           ),
         ],
 
@@ -196,7 +204,7 @@ class _LeftSection extends StatelessWidget {
           const SizedBox(height: 12),
           _InfoBlock(
             title: '',
-            body: detail.tips!.tr(i18n, lang: lang),
+            body: detail.tips!.tr,
           ),
         ],
       ],
@@ -248,14 +256,14 @@ class _RightSection extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
 
-    final name = detail.nameCode.tr(i18n, lang: lang);
-    final desc = (detail.descriptionCode).tr(i18n, lang: lang);
-    final lvl = detail.level.tr(i18n, lang: lang);
+    final name = detail.nameCode.tr;
+    final desc = (detail.descriptionCode).tr;
+    final lvl = detail.level.tr;
     final focus = detail.focusAreas
-        .map((e) => e.keyCode.tr(i18n, lang: lang))
+        .map((e) => e.keyCode.tr)
         .join(', ');
     final equips = detail.equipments
-        .map((e) => e.keyCode.tr(i18n, lang: lang))
+        .map((e) => e.keyCode.tr)
         .join(', ');
 
     return Column(
@@ -372,7 +380,7 @@ class _SegmentsList extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final s = segments[index];
-        final title = s.nameCode.tr(i18n, lang: lang);
+        final title = s.nameCode.tr;
 
         return InkWell(
           borderRadius: BorderRadius.circular(12),

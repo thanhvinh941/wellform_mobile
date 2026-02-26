@@ -7,6 +7,8 @@ import 'package:wellform_mobile/features/exercise/presentation/providers/static_
 import '../../../../core/models/exercise_models.dart';
 import '../../../../core/models/filter_config.dart';
 import '../../../../core/widgets/page_filter.dart';
+import '../../domain/models/equipment.dart';
+import '../../domain/models/focus_area.dart';
 import '../widgets/exercise_card.dart';
 import 'exercise_detail_screen.dart';
 
@@ -26,7 +28,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
 
     Future.microtask(() async {
       await ref.read(staticProvider.notifier).load();
-      await ref.read(exerciseProvider.notifier).load();
+      // await ref.read(exerciseProvider.notifier).load();
     });
 
   }
@@ -34,7 +36,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
   final List<Exercise> exercises = [
     Exercise(
       id: 'ex_001',
-      name: 'Push Up',
+      nameCode: 'Push Up',
       levelCode: 'Beginner',
       imageUrl: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1200&auto=format&fit=crop',
       duration: 45, // giây
@@ -49,7 +51,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     ),
     Exercise(
       id: 'ex_002',
-      name: 'Plank',
+      nameCode: 'Plank',
       levelCode: 'Beginner',
       imageUrl: 'https://images.unsplash.com/photo-1599050751790-26b3ffcc4d07?q=80&w=1200&auto=format&fit=crop',
       duration: 60,
@@ -63,7 +65,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     ),
     Exercise(
       id: 'ex_003',
-      name: 'Dumbbell Row',
+      nameCode: 'Dumbbell Row',
       levelCode: 'Intermediate',
       imageUrl: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?q=80&w=1200&auto=format&fit=crop',
       duration: 40,
@@ -78,7 +80,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     ),
     Exercise(
       id: 'ex_004',
-      name: 'Squat',
+      nameCode: 'Squat',
       levelCode: 'Intermediate',
       imageUrl: 'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
       duration: 50,
@@ -93,7 +95,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     ),
     Exercise(
       id: 'ex_005',
-      name: 'Shoulder Press',
+      nameCode: 'Shoulder Press',
       levelCode: 'Advanced',
       imageUrl: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop',
       duration: 45,
@@ -107,7 +109,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     ),
     Exercise(
       id: 'ex_006',
-      name: 'Deadlift',
+      nameCode: 'Deadlift',
       levelCode: 'Advanced',
       imageUrl: 'https://images.unsplash.com/photo-1546484959-f9a53db89f19?q=80&w=1200&auto=format&fit=crop',
       duration: 55,
@@ -266,7 +268,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                     // Đảm bảo mỗi item có size chặt chẽ trong cell
                     return SizedBox.expand(
                       child: ExerciseCard(
-                        name: ex.name,
+                        name: ex.nameCode,
                         levelCode: ex.levelCode,
                         imageUrl: ex.imageUrl,
                         duration: ex.duration,

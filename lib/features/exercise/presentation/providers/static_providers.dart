@@ -9,7 +9,7 @@ import '../../domain/models/equipment.dart';
 
 // ApiClient
 final apiClientProvider = Provider<ApiClient>((ref) {
-  return ApiClient.create(baseUrl: 'http://localhost:8080/api'); // TODO: set thật
+  return ApiClient.create(baseUrl: 'http://localhost:8080'); // TODO: set thật
 });
 
 // Repo

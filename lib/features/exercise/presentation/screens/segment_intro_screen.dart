@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wellform_mobile/features/exercise/domain/models/exercise_detail.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../../core/models/exercise_models.dart';
 import '../../domain/models/Exercise_set.dart';
+import '../../domain/models/equipment.dart';
+import '../../domain/models/focus_area.dart';
 import '../../domain/models/segment.dart';
 
 // youtube_utils.dart
@@ -19,32 +22,48 @@ String? extractYoutubeId(String url) {
 }
 
 class SegmentIntroScreen extends StatefulWidget {
-  final ExerciseDetail exercise;
-  final int currentSegmentIndex;
 
-  /// Callback khi người dùng nhấn Back
-  final VoidCallback? onBack;
-
-  /// Callback khi người dùng nhấn START SEGMENT
-  final VoidCallback? onStartSegment;
-
-  const SegmentIntroScreen({
-    super.key,
-    required this.exercise,
-    required this.currentSegmentIndex,
-    this.onBack,
-    this.onStartSegment,
-  });
+  ExerciseDetail exercise = ExerciseDetail(
+    id: '',
+    nameCode: 'Squat',
+    level: 'Intermediate',
+    imageUrl:
+    'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+    videoUrl:
+    'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+    duration: 50,
+    focusAreas: const [
+      FocusArea(id: 'fa_legs', keyCode: 'Legs'),
+      FocusArea(id: 'fa_glutes', keyCode: 'Glutes'),
+      FocusArea(id: 'fa_core', keyCode: 'Core'),
+    ],
+    equipments: const [Equipment(id: 'eq_body', keyCode: 'Bodyweight')],
+    descriptionCode: '',
+    segments: [
+      Segment(
+        'seg-1',
+        'back',
+        60,
+        200,
+        'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1599058917212-d750089bc07c?q=80&w=1200&auto=format&fit=crop',
+        [],
+        'back 1',
+        'back 1 des',
+      ),
+    ],
+  );
 
   @override
-  State<SegmentIntroScreen> createState() => _SegmentIntroScreenState();
+  State<StatefulWidget> createState() => _SegmentIntroScreenState();
 }
 
 class _SegmentIntroScreenState extends State<SegmentIntroScreen> {
+  final int currentSegmentIndex = 0;
   YoutubePlayerController? _ytController;
 
   Segment get currentSegment =>
-      widget.exercise.segments[widget.currentSegmentIndex];
+      widget.exercise.segments[currentSegmentIndex];
   int get totalSegments => widget.exercise.segments.length;
 
   int get totalSetsInSegment => currentSegment.sets.length;
@@ -77,6 +96,10 @@ class _SegmentIntroScreenState extends State<SegmentIntroScreen> {
     );
   }
 
+  void onStartSegment(){
+
+  }
+
   @override
   void dispose() {
     _ytController?.dispose();
@@ -92,16 +115,11 @@ class _SegmentIntroScreenState extends State<SegmentIntroScreen> {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: widget.onBack ?? () => Navigator.of(context).maybePop(),
-          tooltip: 'Back',
-        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'SEGMENT ${widget.currentSegmentIndex + 1} / $totalSegments',
+              'SEGMENT ${currentSegmentIndex + 1} / $totalSegments',
               style: textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -137,7 +155,7 @@ class _SegmentIntroScreenState extends State<SegmentIntroScreen> {
               ),
               const SizedBox(height: 24),
               FilledButton(
-                onPressed: widget.onStartSegment,
+                onPressed: onStartSegment,
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 14),
                   child: Text(
@@ -194,7 +212,7 @@ class _InfoCard extends StatelessWidget {
               Row(
                 children: [
                   _ChipInfo(
-                    icon: Icons.center_focus_strong,
+                    icon: Icons.document_scanner,
                     label: 'Focus',
                     value: focus,
                   ),

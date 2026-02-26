@@ -7,7 +7,10 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor(this.storage);
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final token = await storage.read('auth_token');
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
@@ -19,19 +22,52 @@ class AuthInterceptor extends Interceptor {
 /// Retry đơn giản khi lỗi kết nối (tuỳ chọn)
 class RetryOnConnectionChangeInterceptor extends Interceptor {
   final Dio dio;
-  RetryOnConnectionChangeInterceptor(this.dio);
+  final int maxRetries;
+  final Duration baseDelay;
+
+  RetryOnConnectionChangeInterceptor(
+    this.dio, {
+    this.maxRetries = 3,
+    this.baseDelay = const Duration(milliseconds: 500),
+  });
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.type == DioErrorType.connectionError) {
-      try {
-        // thử lại 1 lần
-        final response = await dio.fetch(err.requestOptions);
-        return handler.resolve(response);
-      } catch (_) {
-        // let it fall through
-      }
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    // Chỉ retry khi lỗi network
+    if (!_shouldRetry(err)) {
+      return handler.next(err);
     }
-    super.onError(err, handler);
+
+    final requestOptions = err.requestOptions;
+
+    // Lấy số lần retry hiện tại từ extra
+    int retryCount = requestOptions.extra['retryCount'] ?? 0;
+
+    if (retryCount >= maxRetries) {
+      return handler.next(err); // vượt quá số lần retry
+    }
+
+    retryCount++;
+    requestOptions.extra['retryCount'] = retryCount;
+
+    // Exponential backoff
+    final delay = baseDelay * (1 << (retryCount - 1));
+    await Future.delayed(delay);
+
+    try {
+      final response = await dio.fetch(requestOptions);
+      return handler.resolve(response);
+    } catch (e) {
+      return handler.next(err);
+    }
+  }
+
+  bool _shouldRetry(DioException err) {
+    return err.type == DioExceptionType.connectionError ||
+        err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.receiveTimeout;
   }
 }

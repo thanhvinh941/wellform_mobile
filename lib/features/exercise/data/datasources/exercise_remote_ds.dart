@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../core/models/exercise_models.dart';
 import '../../../common/domain/api_response_models.dart';
 
 // Import các model & typedef đã định nghĩa trong api_response_models.dart
@@ -31,7 +32,7 @@ class ExerciseRemoteDataSource {
   /// - equipments: List<String>
   /// - difficulty: 'all' | 'easy' | 'medium' | 'hard' (server nhận 'level')
   /// - page / pageSize
-  Future<ExerciseSearchResult> fetchExercises({
+  Future<ApiResponse<Exercise>> fetchExercises({
     String keyword = '',
     List<String> focusAreas = const [],
     List<String> equipments = const [],
@@ -41,31 +42,23 @@ class ExerciseRemoteDataSource {
   }) async {
     try {
       final payload = <String, dynamic>{
-        'keyword': keyword.isNotEmpty ? keyword : '',
+        if(keyword.isNotEmpty) 'keyword': keyword,
         'focusAreas': focusAreas.isNotEmpty ? focusAreas.join(',') : [], // giữ nguyên theo code cũ
         'equipments': equipments.isNotEmpty ? equipments.join(',') : [],
-        'level': difficulty != 'all' ? difficulty : '',
+        'level': difficulty != 'all' ? difficulty : [],
       };
 
-      final res = await http.post(
-        Uri.parse('http://localhost:8080/api/external/exercises/by-w/null/search'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(payload),
+      final res = await dio.post(
+        'http://localhost:8089/external/exercises/by-w/null/search',
+        data: payload,
       );
 
       final api = ApiResponse<Exercise>.fromJson(
-        Map<String, dynamic>.from(res.body as Map),
+        Map<String, dynamic>.from(res.data as Map),
             (e) => Exercise.fromJson(e),
       );
 
-      final results = api.results;
-      return ExerciseSearchResult(
-        success: api.success,
-        items: results?.data ?? const <Exercise>[],
-        i18n: results?.i18n ?? const <String, Map<String, String>>{},
-      );
+      return api;
     } on DioException catch (e) {
       // Bạn có thể log e.response?.data để debug thêm
       throw Exception('fetchExercises failed: ${e.message}');

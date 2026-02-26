@@ -14,6 +14,4 @@ class Segment {
 
   Segment(this.id, this.focus, this.restTime, this.duration, this.imageUrl,
       this.videoUrl, this.sets, this.nameCode, this.descriptionCode);
-
-
 }

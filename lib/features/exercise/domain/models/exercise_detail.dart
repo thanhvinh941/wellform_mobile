@@ -1,6 +1,7 @@
 import 'package:wellform_mobile/features/exercise/domain/models/segment.dart';
 
-import '../../../../core/models/exercise_models.dart';
+import 'equipment.dart';
+import 'focus_area.dart';
 
 class ExerciseDetail {
   final String id;

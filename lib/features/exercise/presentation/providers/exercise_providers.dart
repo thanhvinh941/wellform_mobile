@@ -48,7 +48,7 @@ class ExerciseQuery {
 
 class ExerciseState {
   final bool loading;
-  final ExerciseSearchResult? items;
+  final List<Exercise>? items;
   final Object? error;
   final ExerciseQuery query;
 
@@ -61,7 +61,7 @@ class ExerciseState {
 
   ExerciseState copyWith({
     bool? loading,
-    ExerciseSearchResult? items,
+    List<Exercise>? items,
     Object? error = Object,
     ExerciseQuery? query,
   }) {
@@ -73,36 +73,36 @@ class ExerciseState {
     );
   }
 }
-
-class ExerciseNotifier extends StateNotifier<ExerciseState> {
-  final ExerciseRepository repo;
-  ExerciseNotifier(this.repo) : super(const ExerciseState());
-
-  Future<void> load() async {
-    state = state.copyWith(loading: true, error: null);
-    try {
-      final q = state.query;
-      final list = await repo.search(
-        keyword: q.keyword,
-        focusAreas: q.focusAreas,
-        difficulty: q.difficulty,
-        page: q.page,
-        pageSize: q.pageSize,
-      );
-      state = state.copyWith(loading: false, items: list);
-    } catch (e) {
-      state = state.copyWith(loading: false, error: e);
-    }
-  }
-
-  void setQuery(ExerciseQuery query, {bool autoLoad = true}) {
-    state = state.copyWith(query: query);
-    if (autoLoad) load();
-  }
-}
-
-final exerciseProvider =
-StateNotifierProvider<ExerciseNotifier, ExerciseState>((ref) {
-  final repo = ref.watch(exerciseRepoProvider);
-  return ExerciseNotifier(repo);
-});
+//
+// class ExerciseNotifier extends StateNotifier<ExerciseState> {
+//   final ExerciseRepository repo;
+//   ExerciseNotifier(this.repo) : super(const ExerciseState());
+//
+//   Future<void> load() async {
+//     state = state.copyWith(loading: true, error: null);
+//     try {
+//       final q = state.query;
+//       final list = await repo.search(
+//         keyword: q.keyword,
+//         focusAreas: q.focusAreas,
+//         difficulty: q.difficulty,
+//         page: q.page,
+//         pageSize: q.pageSize,
+//       );
+//       state = state.copyWith(loading: false, items: list);
+//     } catch (e) {
+//       state = state.copyWith(loading: false, error: e);
+//     }
+//   }
+//
+//   void setQuery(ExerciseQuery query, {bool autoLoad = true}) {
+//     state = state.copyWith(query: query);
+//     if (autoLoad) load();
+//   }
+// }
+//
+// final exerciseProvider =
+// StateNotifierProvider<ExerciseNotifier, ExerciseState>((ref) {
+//   final repo = ref.watch(exerciseRepoProvider);
+//   return ExerciseNotifier(repo);
+// });
